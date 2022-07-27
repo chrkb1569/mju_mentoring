@@ -2,6 +2,8 @@ package mju_spring.study.service;
 
 import lombok.RequiredArgsConstructor;
 import mju_spring.study.entity.Board;
+import mju_spring.study.exception.BoardNotFoundException;
+import mju_spring.study.exception.GetWrongInfoException;
 import mju_spring.study.repository.BoardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,17 +31,21 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public Board getBoard(Long id){
-        return boardRepository.findById(id).get();
+        return boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
     }
 
     @Transactional
     public Board save(Board board) {
+        if(board.getTitle().equals("") || board.getContent().equals("") || board.getWriter().equals("")) {
+            throw new GetWrongInfoException();
+        }
+
         return boardRepository.save(board);
     }
 
     @Transactional
     public Board editBoard(Long id, Board board) {
-        Board findItem = boardRepository.findById(id).get();
+        Board findItem = boardRepository.findById(id).orElseThrow(BoardNotFoundException::new);
 
         findItem.setTitle(board.getTitle());
         findItem.setContent(board.getContent());
