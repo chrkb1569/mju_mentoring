@@ -1,12 +1,16 @@
 package mju_spring.study.controller;
 
 import lombok.RequiredArgsConstructor;
+import mju_spring.study.dto.board.BoardCreateRequestDto;
+import mju_spring.study.dto.board.BoardEditRequestDto;
 import mju_spring.study.entity.Board;
 import mju_spring.study.response.Response;
 import mju_spring.study.service.BoardService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 /**
  * Controller 는 클라이언트(사용자)의 요청을 받는 클래스입니다.
@@ -36,7 +40,6 @@ public class BoardController {
 //    public ResponseEntity<?> getBoard(@PathVariable Long id) {
 //        return new ResponseEntity<>(boardService.getBoard(id), HttpStatus.OK);
 //    }
-
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/board/{id}")
     public Response getBoard(@PathVariable Long id) {
@@ -48,10 +51,16 @@ public class BoardController {
 //        return new ResponseEntity<>(boardService.save(board), HttpStatus.OK);
 //    }
 
+//    @ResponseStatus(HttpStatus.OK)
+//    @PostMapping("/boards")
+//    public Response save(@RequestBody Board board) {
+//        return Response.success(boardService.save(board));
+//    }
+
     @ResponseStatus(HttpStatus.OK)
     @PostMapping("/boards")
-    public Response save(@RequestBody Board board) {
-        return Response.success(boardService.save(board));
+    public Response save(@RequestBody @Valid BoardCreateRequestDto requestDto) {
+        return Response.success(boardService.save(requestDto));
     }
 
 //    @PutMapping("/board/{id}")
@@ -59,10 +68,16 @@ public class BoardController {
 //        return new ResponseEntity<>(boardService.editBoard(id, board), HttpStatus.OK);
 //    }
 
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @PutMapping("/board/{id}")
+//    public Response editBoard(@PathVariable Long id, @RequestBody Board board) {
+//        return Response.success(boardService.editBoard(id, board));
+//    }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/board/{id}")
-    public Response editBoard(@PathVariable Long id, @RequestBody Board board) {
-        return Response.success(boardService.editBoard(id, board));
+    public Response editBoard(@PathVariable Long id, @RequestBody @Valid BoardEditRequestDto requestDto) {
+        return Response.success(boardService.editBoard(id, requestDto));
     }
 
 //    @DeleteMapping("/board/{id}")
